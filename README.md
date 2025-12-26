@@ -6,7 +6,7 @@ Teneo Community Node BOT
 - Download [Extension](https://chromewebstore.google.com/detail/teneo-community-node/emcclcoaglgcpoognfiggmhnhgabppkm)
 
 ## Features
-
+  - Private Turnstile-Solver support
   - Auto Get Account Information
   - Auto Run With [Free Proxyscrape](https://proxyscrape.com/free-proxy-list) Proxy - `Choose 1`
   - Auto Run With Private Proxy - `Choose 2`
@@ -16,7 +16,7 @@ Teneo Community Node BOT
   - Multi Accounts With Threads
 
 ## Requiremnets
-
+-If you have set up a private Turnstile-Solver, please use setup2.py
 - Make sure you have Python3.9 or higher installed and pip.
 - 2captcha key (optional)
 
