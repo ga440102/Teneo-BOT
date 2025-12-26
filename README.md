@@ -24,7 +24,7 @@ Teneo Community Node BOT
 
 1. **Clone The Repositories:**
    ```bash
-   git clone https://github.com/vonssy/Teneo-BOT.git
+   git clone https://github.com/ga440102/Teneo-BOT.git
    ```
    ```bash
    cd Teneo-BOT
