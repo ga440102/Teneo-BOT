@@ -16,10 +16,10 @@ Teneo Community Node BOT
   - Multi Accounts With Threads
 
 ## Requiremnets
--If you have set up a private Turnstile-Solver, please use setup2.py
+
 - Make sure you have Python3.9 or higher installed and pip.
 - 2captcha key (optional)
-
+- If you have set up a private Turnstile-Solver, please use setup2.py
 ## Instalation
 
 1. **Clone The Repositories:**
