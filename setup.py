@@ -16,18 +16,19 @@ class Teneo:
         self.headers = {
             "Accept": "application/json, text/plain, */*",
             "Accept-Language": "en-US,en;q=0.9",
-            "Origin": "https://dashboard.teneo.pro",
-            "Referer": "https://dashboard.teneo.pro/",
+            "Origin": "https://teneo-protocol.ai",
+            "Referer": "https://teneo-protocol.ai/",
             "Sec-Fetch-Dest": "empty",
             "Sec-Fetch-Mode": "cors",
             "Sec-Fetch-Site": "same-site",
             "User-Agent": FakeUserAgent().random
         }
         self.BASE_API = "https://auth.teneo.pro/api"
-        self.PAGE_URL = "https://dashboard.teneo.pro"
+        self.PAGE_URL = "https://dashboard.teneo.pro/auth"
         self.SITE_KEY = "0x4AAAAAAAkhmGkb2VS6MRU0"
         self.API_KEY = "OwAG3kib1ivOJG4Y0OCZ8lJETa6ypvsDtGmdhcjB"
         self.CAPTCHA_KEY = None
+        self.SOLVER_SERVER = "http://127.0.0.1:5000"  # Local solver server
         self.proxies = []
         self.proxy_index = 0
         self.account_proxies = {}
@@ -191,6 +192,32 @@ class Teneo:
             connector = ProxyConnector.from_url(proxy) if proxy else None
             try:
                 async with ClientSession(connector=connector, timeout=ClientTimeout(total=60)) as session:
+
+                    # Try local solver server first
+                    if getattr(self, 'SOLVER_SERVER', None):
+                        import time
+                        try:
+                            params = {"url": self.PAGE_URL, "sitekey": self.SITE_KEY}
+                            async with session.get(f"{self.SOLVER_SERVER}/turnstile", params=params, timeout=ClientTimeout(total=30)) as response:
+                                if response.status == 202:
+                                    data = await response.json()
+                                    task_id = data.get("task_id")
+                                    if task_id:
+                                        start = time.time()
+                                        while time.time() - start < 90:
+                                            async with session.get(f"{self.SOLVER_SERVER}/result", params={"id": task_id}, timeout=ClientTimeout(total=20)) as res:
+                                                if res.status in (200, 422):
+                                                    try:
+                                                        data = await res.json()
+                                                        token = data.get("value") if isinstance(data, dict) else None
+                                                        if token and token != "CAPTCHA_FAIL":
+                                                            self.turnstile_tokens[email] = token
+                                                            return True
+                                                    except:
+                                                        pass
+                                            await asyncio.sleep(3)
+                        except Exception as e:
+                            pass
 
                     if self.CAPTCHA_KEY is None:
                         return None
@@ -377,3 +404,4 @@ if __name__ == "__main__":
             f"{Fore.WHITE + Style.BRIGHT} | {Style.RESET_ALL}"
             f"{Fore.RED + Style.BRIGHT}[ EXIT ] Teneo - BOT{Style.RESET_ALL}                                      ",                                       
         )
+
