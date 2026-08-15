@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+
+# Teneo-BOT 私密凭证（切勿提交到公开仓库）
+accounts.json
+tokens.json
+2captcha_key.txt
+proxy.txt
